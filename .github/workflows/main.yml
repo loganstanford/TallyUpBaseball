@@ -3,8 +3,7 @@ name: FTP Deploy
 on:
   push:
     branches:
-      - main  # Set your deployment branch here
-
+      - main  
 jobs:
   ftp-deploy:
     runs-on: ubuntu-latest
@@ -18,4 +17,4 @@ jobs:
         server: ftp://217.180.196.211
         username: ${{ secrets.FTP_USERNAME }}  
         password: ${{ secrets.FTP_PASSWORD }}  
-        local-dir: ./web/  
+        server-dir: ./web/  
