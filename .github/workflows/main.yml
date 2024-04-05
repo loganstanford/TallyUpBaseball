@@ -18,4 +18,4 @@ jobs:
         server: ftp://217.180.196.211
         username: ${{ secrets.FTP_USERNAME }}  
         password: ${{ secrets.FTP_PASSWORD }}  
-        local-dir: ./web  
+        local-dir: ./web/  
