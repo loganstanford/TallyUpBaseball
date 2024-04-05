@@ -1,0 +1,20 @@
+name: FTP Deploy
+
+on:
+  push:
+    branches:
+      - main  # Set your deployment branch here
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: FTP Deploy Action
+      uses: SamKirkland/FTP-Deploy-Action@4.0.0
+      with:
+        server: ftp://217.180.196.211
+        username: ${{ secrets.FTP_USERNAME }}  
+        password: ${{ secrets.FTP_PASSWORD }}  
+        local-dir: ./web  
