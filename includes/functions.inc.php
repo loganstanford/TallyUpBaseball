@@ -314,7 +314,11 @@ function showPlayerName($row, $injuryIds, $lineup) {
     $bbrefPath = $row['bbref_id'] ? $row['bbref_id'][0] . "/" . $row['bbref_id'] . ".shtml" : "";
     $bbrefUrl = $bbrefRoot . $bbrefPath;
     $statusClass = 'nav-icon far fa-circle text-';
-    $statusClass .= in_array($row['srid'], $lineup) ? 'success' : (isset($lineup) ? 'danger' : 'warning');
+    if (!empty($lineup) && in_array($row['srid'], $lineup)) {
+        $statusClass .= 'success';
+    } else {
+        $statusClass .= empty($lineup) ? 'warning' : 'danger';
+    }
     
     $playerName = htmlspecialchars($row['first_name'] . " " . $row['last_name'], ENT_QUOTES, 'UTF-8');
     $teamName = htmlspecialchars($row['team_name'], ENT_QUOTES, 'UTF-8');
@@ -358,10 +362,10 @@ function showPitching($row) {
 }
 
 function getLineup($g) {
+    $lineup = array(); // Initialize as an empty array
     if ($g['l1']) {
+        // If there is a lineup, fill the array
         $lineup = array($g['l1'], $g['l2'],$g['l3'],$g['l4'],$g['l5'],$g['l6'],$g['l7'],$g['l8'],$g['l9']);
-    } else {
-        $lineup = "No lineup";
     }
     return $lineup;
 }
