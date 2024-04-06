@@ -228,11 +228,11 @@ try {
                                                 <td class="box-stats"><?php echo (is_Null($r['H'])) ? "-" : $r['H']; ?>
                                                 </td>
                                                 <td class="box-stats">
-                                                    <?php echo (is_Null($r['1B'])) ? "-" : $r['singles']; ?></td>
+                                                    <?php echo (is_Null($r['singles'])) ? "-" : $r['singles']; ?></td>
                                                 <td class="box-stats">
-                                                    <?php echo (is_Null($r['2B'])) ? "-" : $r['doubles']; ?></td>
+                                                    <?php echo (is_Null($r['doubles'])) ? "-" : $r['doubles']; ?></td>
                                                 <td class="box-stats">
-                                                    <?php echo (is_Null($r['3B'])) ? "-" : $r['triples']; ?></td>
+                                                    <?php echo (is_Null($r['triples'])) ? "-" : $r['triples']; ?></td>
                                                 <td class="box-stats">
                                                     <?php echo (is_Null($r['RBI'])) ? "-" : $r['RBI']; ?></td>
                                                 <td class="box-stats">
@@ -254,7 +254,7 @@ try {
                                                 <td class="box-stats">
                                                     <?php echo (is_Null($r['team_name'])) ? "FA" : $r['team_name']; ?></td>
                                                 <td class="box-stats total">
-                                                    <?php echo (is_Null($r['Total points'])) ? "0" : $r['Total_points']; ?>
+                                                    <?php echo (is_Null($r['Total_points'])) ? "0" : $r['Total_points']; ?>
                                                 </td>
                                             </tr>
                                             <?php endwhile; ?>
