@@ -133,3 +133,16 @@ body.modal-open {
 a:hover {
     cursor:pointer;
 }
+
+#loadingOverlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.7); /* White background with opacity */
+    justify-content: center;
+    align-items: center;
+}

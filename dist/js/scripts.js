@@ -239,3 +239,7 @@ $(function () {
         placement: 'top'
     })
 });
+
+$(window).on('load', function() {
+    $('#loadingOverlay').hide();
+});

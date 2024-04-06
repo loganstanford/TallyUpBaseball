@@ -22,6 +22,12 @@ include 'styles.php';
 <?php require_once 'dbconfig.php'; ?>
 
 <body class="hold-transition sidebar-mini dark-mode">
+    <div id="loadingOverlay" style="position: fixed; z-index: 1000; top: 0; left: 0; height: 100%; width: 100%; background: rgba(255, 255, 255, 0.7); display: flex; justify-content: center; align-items: center;">
+        <div style="text-align: center;">
+            <img src="loading.gif" alt="Loading..." style="margin-bottom: 20px;"> <!-- Replace with your loading GIF -->
+            <p>Loading...</p>
+        </div>
+    </div>
     <div class="wrapper">
 
         <?php include 'nav.php';?>
@@ -149,25 +155,39 @@ include 'styles.php';
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
-                                            
-        try {
-            $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-            // execute the stored procedure
-            //$daysBack = isset($_GET['days']) ? $_GET['days'] : 999;
-            //$sql = "CALL getTeamStats(5, $daysBack)";
-            $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : '2023-03-30';
-            $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : date("Y-m-d");
-            $sql = "CALL getAllPlayerStats('$startDate', '$endDate')";
-            // call the stored procedure
-            $q = $pdo->query($sql);
-            $q->setFetchMode(PDO::FETCH_ASSOC);
-            $playerids = array();
-        } catch (PDOException $e) {
-            die("Error occurred:" . $e->getMessage());
-        }
-        ?>
+<?php                                    
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
 
+    $currentYear = date("Y");
+    $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : "$currentYear-01-01";
+    $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : date("Y-m-d");
+
+    $today = new DateTime();
+    $last7Days = (new DateTime())->sub(new DateInterval('P6D'));
+    $last15Days = (new DateTime())->sub(new DateInterval('P14D'));
+    $last30Days = (new DateTime())->sub(new DateInterval('P29D'));
+
+    // Determine which aggregated table or stored procedure to use
+    if ($startDate == "$currentYear-01-01" && $endDate == $today->format('Y-m-d')) {
+        $sql = "SELECT * FROM agg_stats_ytd";  // Year-to-date
+    } elseif ($startDate == $last7Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
+        $sql = "SELECT * FROM agg_stats_last7";  // Last 7 days
+    } elseif ($startDate == $last15Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
+        $sql = "SELECT * FROM agg_stats_last15";  // Last 15 days
+    } elseif ($startDate == $last30Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
+        $sql = "SELECT * FROM agg_stats_last30";  // Last 30 days
+    } else {
+        $sql = "CALL getAllPlayerStats('$startDate', '$endDate')";  // Custom range
+    }
+
+    $q = $pdo->query($sql);
+    $q->setFetchMode(PDO::FETCH_ASSOC);
+    $playerids = array();
+} catch (PDOException $e) {
+    die("Error occurred:" . $e->getMessage());
+}                                      
+?>
                                             <?php while ($r = $q->fetch()): 
                                                 $id = $r['srid'];
                                                 $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
