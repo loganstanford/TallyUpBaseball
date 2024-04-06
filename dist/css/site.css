@@ -135,7 +135,7 @@ a:hover {
 }
 
 #loading-overlay {
-    display: none;
+    display: block; /* Show initially */
     position: fixed;
     top: 0;
     left: 0;
@@ -150,4 +150,4 @@ a:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
+}

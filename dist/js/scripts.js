@@ -242,4 +242,10 @@ $(function () {
 
 $(window).on('load', function() {
     $('#loading-overlay').fadeOut('slow');
-  });
+});
+
+// Remove the initial display block style after the overlay is hidden
+$('#loading-overlay').on('fadeOut', function() {
+    $(this).css('display', '');
+});
+
