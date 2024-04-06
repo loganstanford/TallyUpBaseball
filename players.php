@@ -167,13 +167,13 @@ try {
 
     // Determine which aggregated table or stored procedure to use
     if ($startDate == "$currentYear-01-01" && $endDate == $today->format('Y-m-d')) {
-        $sql = "SELECT * FROM agg_stats_ytd";  // Year-to-date
+        $sql = "SELECT * FROM agg_stats_ytd ORDER BY Total_Points DESC LIMIT 100";  // Year-to-date
     } elseif ($startDate == $last7Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
-        $sql = "SELECT * FROM agg_stats_last7";  // Last 7 days
+        $sql = "SELECT * FROM agg_stats_last7 ORDER BY Total_Points DESC LIMIT 100";  // Last 7 days
     } elseif ($startDate == $last15Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
-        $sql = "SELECT * FROM agg_stats_last15";  // Last 15 days
+        $sql = "SELECT * FROM agg_stats_last15 ORDER BY Total_Points DESC LIMIT 100";  // Last 15 days
     } elseif ($startDate == $last30Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
-        $sql = "SELECT * FROM agg_stats_last30";  // Last 30 days
+        $sql = "SELECT * FROM agg_stats_last30 ORDER BY Total_Points DESC LIMIT 100";  // Last 30 days
     } else {
         $sql = "CALL getAllPlayerStats('$startDate', '$endDate')";  // Custom range
     }
