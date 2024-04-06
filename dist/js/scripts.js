@@ -241,5 +241,5 @@ $(function () {
 });
 
 $(window).on('load', function() {
-    $('#loadingOverlay').hide();
-});
+    $('#loadingOverlay').fadeOut('slow');
+  });
