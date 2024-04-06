@@ -25,45 +25,47 @@ function redirectHTTPS() {
 }
 
 function showPlayerName($row, $injuryIds, $lineup) {
-    echo '<div class="player-name">';
-    if ($row['bbref'] != NULL) {
-        $bbrefroot = "https://www.baseball-reference.com/players/";
-        $path = $row['bbref'][0] . "/" . $row['bbref'] . ".shtml";
-        $bbrefurl = $bbrefroot . $path;
-        echo "<a href='$bbrefurl' target='_blank'>" . $row['First Name'] . " " . $row['Last Name'] . "</a>"; 
-    }
-    else {
-        echo  $row['First Name'] . " " . $row['Last Name']; 
+    $playerNameHtml = '';
+    $bbrefRoot = "https://www.baseball-reference.com/players/";
+    $bbrefPath = $row['bbref_id'] ? $row['bbref_id'][0] . "/" . $row['bbref_id'] . ".shtml" : "";
+    $bbrefUrl = $bbrefRoot . $bbrefPath;
+    $statusClass = 'nav-icon far fa-circle text-';
+    $statusClass .= in_array($row['srid'], $lineup) ? 'success' : (isset($lineup) ? 'danger' : 'warning');
+    
+    $playerName = htmlspecialchars($row['first_name'] . " " . $row['last_name'], ENT_QUOTES, 'UTF-8');
+    $teamName = htmlspecialchars($row['team_name'], ENT_QUOTES, 'UTF-8');
+    $position = htmlspecialchars(str_replace(' ', ', ', $row['pos']), ENT_QUOTES, 'UTF-8');
+    $bats = htmlspecialchars($row['bats'], ENT_QUOTES, 'UTF-8');
+
+    if (!empty($bbrefPath)) {
+        $playerNameHtml .= "<a href='$bbrefUrl' target='_blank'>$playerName</a>"; 
+    } else {
+        $playerNameHtml .= $playerName; 
     }
     
     if (in_array($row['srid'], $injuryIds)) { 
-        $srid = $row['srid'];
         $status = $row['Status'] == "A" ? 'DTD' : $row['Status'];
-        echo ' - <a href="#" class="injury-status" style="color: red;" data-toggle="modal" data-target="#' . $srid . '" onclick="showModal(' . "'" . $srid . "')" . '">' . $status . "</a>";
+        $playerNameHtml .= ' - <a href="#" class="injury-status" style="color: red;" data-toggle="modal" data-target="#' . htmlspecialchars($row['srid'], ENT_QUOTES, 'UTF-8') . '" onclick="showModal(' . "'" . htmlspecialchars($row['srid'], ENT_QUOTES, 'UTF-8') . "')" . '">' . htmlspecialchars($status, ENT_QUOTES, 'UTF-8') . "</a>";
     }
-    echo "<a href='https://www.rotowire.com/baseball/daily-lineups.php' target='_blank'>";
-    if ($lineup != "No lineup") {
-        
-        if (in_array($row['srid'], $lineup)) {
-            echo '<i class="nav-icon far fa-circle text-success ml-2"></i>';
-        }
-        else {
-            echo '<i class="nav-icon far fa-circle text-danger ml-2"></i>';
-        }
-    }
-    else {
-        echo '<i class="nav-icon far fa-circle text-warning ml-2"></i>';
-    }
-    echo "</a>";
-    echo '</div>';
-    echo '<div class="player-bio text-muted">';
-    echo '<span class="bio-team">' . $row['Team'] . " - ";
-    echo '</span>';
-    echo  '<span class="bio-pos">' . str_replace(' ', ', ', $row['Pos']); 
-    echo '</span> | ';
-    echo '<span class="bat-hand" data-toggle"tooltip" title="show splits here">Bats: ' . $row['bats'] . '</span>';
-    echo '</div>';
+
+    $rotowireLink = '<a href="https://www.rotowire.com/baseball/daily-lineups.php" target="_blank"><i class="' . $statusClass . ' ml-2"></i></a>';
+    
+    // Now combine the HTML parts
+    $html = <<<HTML
+<div class="player-name">
+    $playerNameHtml
+    $rotowireLink
+</div>
+<div class="player-bio text-muted">
+    <span class="bio-team">$teamName - </span>
+    <span class="bio-pos">$position</span> | 
+    <span class="bat-hand" data-toggle"tooltip" title="show splits here">Bats: $bats</span>
+</div>
+HTML;
+
+    return $html;
 }
+
 
 function showPitching($row) {
     $bbrefroot = "https://www.baseball-reference.com/teams/";
