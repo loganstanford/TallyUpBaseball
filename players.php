@@ -20,11 +20,10 @@ include 'styles.php';
 ?>
 </head>
 <?php require_once 'dbconfig.php'; ?>
-
 <body class="hold-transition sidebar-mini dark-mode">
     <div id="loadingOverlay" style="position: fixed; z-index: 1000; top: 0; left: 0; height: 100%; width: 100%; background: rgba(255, 255, 255, 0.7); display: flex; justify-content: center; align-items: center;">
         <div style="text-align: center;">
-            <img src="loading.gif" alt="Loading..." style="margin-bottom: 20px;"> <!-- Replace with your loading GIF -->
+            <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGtjZ2hvZDZyZmF4enViazRnYW92N213bTA5eDI5ZWVicHM5d2MzNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/1Aftgizz0ekprKsRHJ/giphy.gif" alt="Loading..." style="margin-bottom: 20px;"> <!-- Replace with your loading GIF -->
             <p>Loading...</p>
         </div>
     </div>
