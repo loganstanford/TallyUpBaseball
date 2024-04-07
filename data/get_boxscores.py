@@ -7,7 +7,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
 import logging
 
-d = datetime.today() - timedelta(days=6)
+d = datetime.today()
 update_bbrefid_enabled = False
 
 log_path = os.path.join(os.path.dirname(__file__), 'logs/boxscore_daily.log')
