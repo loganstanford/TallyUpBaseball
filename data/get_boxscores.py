@@ -1,6 +1,6 @@
 import json, re, requests, os
 from config import DB_CONNECTION_STRING, API_KEY
-from pybaseball import *
+# from pybaseball import *
 from datetime import timedelta, datetime
 import pandas as pd
 from sqlalchemy import create_engine, text
@@ -23,7 +23,6 @@ except Exception as e:
     logging.critical(e)
 else:
     logging.debug("Successfully created engine")
-
 
 
 def get_sportsradar_games_daily(date):
