@@ -300,13 +300,15 @@ function checkLogin($con) {
 }
 
 function redirectHTTPS() {
-    if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off") {
+    $isLocal = in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1']);
+    if (!$isLocal && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === "off")) {
         $location = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         header('HTTP/1.1 301 Moved Permanently');
         header('Location: ' . $location);
         exit;
     }
 }
+
 
 function showPlayerName($row, $injuryIds, $lineup) {
     $playerNameHtml = '';
@@ -347,7 +349,7 @@ function showPlayerName($row, $injuryIds, $lineup) {
 <div class="player-bio text-muted">
     <span class="bio-team">$teamName - </span>
     <span class="bio-pos">$position</span> | 
-    <span class="bat-hand" data-toggle"tooltip" title="show splits here">Bats: $bats</span>
+    <span class="bat-hand" data-toggle="tooltip" title="show splits here">Bats: $bats</span>
 </div>
 HTML;
 
