@@ -7,7 +7,7 @@ require_once 'includes/functions.inc.php';
     <!-- Brand Logo -->
     <a href="index.php" class="brand-link">
         <img src="logo.png" alt="league-logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light"><b>Tally</b>Fantasy</span>
+        <span class="brand-text font-weight-light"><b>Tallyup</b>Baseball</span>
     </a>
 
     <!-- Sidebar -->
@@ -49,7 +49,7 @@ require_once 'includes/functions.inc.php';
                     <ul class="nav nav-treeview" style="display: none;">
                 <?php
                 try {
-                    $teamsSQL = "SELECT d.name as 'division', m.name as 'team_name', d.manager_id as 'team_id' FROM `divisions` as d JOIN managers as m ON d.manager_id = m.id";
+                    $teamsSQL = "SELECT d.name as 'division', m.name as 'team_name', d.manager_id as 'team_id' FROM `divisions` as d JOIN managers as m ON d.manager_id = m.id WHERE d.year = YEAR(CURDATE()) ORDER BY d.name, m.name;";
                     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
                     // call the stored procedure
                     $q = $pdo->query($teamsSQL);
