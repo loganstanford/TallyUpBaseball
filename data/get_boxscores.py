@@ -11,7 +11,9 @@ import logging
 d = datetime.today() - timedelta(days=6)
 update_bbrefid_enabled = False
 
-logging.basicConfig(filename='boxscore_daily.log', filemode='a', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+log_path = os.path.join(os.path.dirname(__file__), 'logs/boxscore_daily.log')
+
+logging.basicConfig(filename=log_path, filemode='a', level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logging.debug("Script started for %s", d)
 
 # Create engine
