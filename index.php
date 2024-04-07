@@ -39,52 +39,6 @@ redirectHTTPS();
                             Recent results
                         </div>
                         <div class="card-body">
-                            <table id="recent-results" class="datatable table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Matchup</th>
-                                        <th>Game 1</th>
-                                        <th>Game 2</th>
-                                        <th>Game 3</th>
-                                        <th>Total</th>
-                                        <th>Series record</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    try {
-                                        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-                                        
-                                        $sql = "CALL getRecentResults()";
-                                        // call the stored procedure
-                                        $q = $pdo->query($sql);
-                                        $q->setFetchMode(PDO::FETCH_ASSOC);
-                                    } catch (PDOException $e) {
-                                        die("Error occurred:" . $e->getMessage());
-                                    }
-                                    ?>
-
-                                    <?php while ($r = $q->fetch()): 
-                                        ?>
-                                    
-                                    <?php endwhile; ?>
-                                    <tr>
-                                        <td>Jeff/Logan</td>
-                                        <td>22</td>
-                                        <td>32</td>
-                                        <td>30</td>
-                                    </tr>
-                                    <tr>
-                                        <td>v.</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Bobby2</td>
-                                        <td>29</td>
-                                        <td>24</td>
-                                        <td>44</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>
                     </div>
                 </div>
