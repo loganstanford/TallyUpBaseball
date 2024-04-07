@@ -316,7 +316,7 @@ include 'styles.php';
                                                 <td>
                                                     <?php 
                                                 $lineup = getLineup($g);
-                                                showPlayerName($r, $injuryIds, $lineup); ?>
+                                                echo showPlayerName($r, $injuryIds, $lineup); ?>
                                                 </td>
                                                 <td class="box-stats"><?php echo $r['AB']; ?></td>
                                                 <td class="box-stats"><?php echo $r['R']; ?></td>
@@ -324,7 +324,7 @@ include 'styles.php';
                                                 <td class="box-stats"><?php echo $r['HR']; ?></td>
                                                 <td class="box-stats"><?php echo $r['TB']; ?></td>
                                                 <td class="box-stats"><?php echo $r['OPS']; ?></td>
-                                                <td class="box-stats"><?php echo $r['Total points']; ?></td>
+                                                <td class="box-stats"><?php echo $r['Total_points']; ?></td>
                                             </tr>
                                             <?php endwhile; ?>
                                         </tbody>
