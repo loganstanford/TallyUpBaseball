@@ -6,5 +6,5 @@
     ?>
 </div>
 <!-- Default to the left -->
-<strong>Copyright &copy; 2023 Logan Stanford</a>.</strong> All rights
+<strong>Copyright &copy; <?= date('Y') ?> Logan Stanford</a>.</strong> All rights
 reserved.
