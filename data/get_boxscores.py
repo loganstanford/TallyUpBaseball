@@ -256,7 +256,7 @@ def update_player_db(p, teamid, conn):
 def process_lineups(game, t, game_id, team_id, conn):
     try:
         # Check if 'lineup' exists and has 9 players
-        if 'lineup' in game[t] and len(game[t]['lineup']) == 9:
+        if 'lineup' in game[t]:
             lineup = {
                 "game_id": game_id,
                 "team_id": team_id,
