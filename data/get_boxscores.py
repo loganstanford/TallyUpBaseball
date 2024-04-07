@@ -255,19 +255,24 @@ def update_player_db(p, teamid, conn):
 
 def process_lineups(game, t, game_id, team_id, conn):
     try:
-        lineup = {
-            "game_id": game_id,
-            "team_id": team_id,
-            "l1": game[t]['lineup'][1]['id'] if 1 in game[t]['lineup'] else '',
-            "l2": game[t]['lineup'][2]['id'] if 2 in game[t]['lineup'] else '',
-            "l3": game[t]['lineup'][3]['id'] if 3 in game[t]['lineup'] else '',
-            "l4": game[t]['lineup'][4]['id'] if 4 in game[t]['lineup'] else '',
-            "l5": game[t]['lineup'][5]['id'] if 5 in game[t]['lineup'] else '',
-            "l6": game[t]['lineup'][6]['id'] if 6 in game[t]['lineup'] else '',
-            "l7": game[t]['lineup'][7]['id'] if 7 in game[t]['lineup'] else '',
-            "l8": game[t]['lineup'][8]['id'] if 8 in game[t]['lineup'] else '',
-            "l9": game[t]['lineup'][9]['id'] if 9 in game[t]['lineup'] else ''
-        }
+        # Check if 'lineup' exists and has 9 players
+        if 'lineup' in game[t] and len(game[t]['lineup']) == 9:
+            lineup = {
+                "game_id": game_id,
+                "team_id": team_id,
+                "l1": game[t]['lineup'][0]['id'],
+                "l2": game[t]['lineup'][1]['id'],
+                "l3": game[t]['lineup'][2]['id'],
+                "l4": game[t]['lineup'][3]['id'],
+                "l5": game[t]['lineup'][4]['id'],
+                "l6": game[t]['lineup'][5]['id'],
+                "l7": game[t]['lineup'][6]['id'],
+                "l8": game[t]['lineup'][7]['id'],
+                "l9": game[t]['lineup'][8]['id']
+            }
+            # ... rest of your code for processing lineup
+        else:
+            logging.warning("Lineup data missing or incomplete for game %s, team %s", game_id, team_id)
         if 'probable_pitcher' in game[t]:
             lineup["probable_starter"] = game[t]['probable_pitcher']['id']
             if 'era' in game[t]['probable_pitcher']:
