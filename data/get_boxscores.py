@@ -3,9 +3,8 @@ from config import DB_CONNECTION_STRING, API_KEY
 from pybaseball import *
 from datetime import timedelta, datetime
 import pandas as pd
-from sqlalchemy import create_engine, text, Table, MetaData, select, delete, or_
+from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
-import pymysql
 import logging
 
 d = datetime.today() - timedelta(days=6)
