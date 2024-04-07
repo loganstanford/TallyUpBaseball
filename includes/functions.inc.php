@@ -322,10 +322,16 @@ function showPlayerName($row, $injuryIds, $lineup) {
         $statusClass .= empty($lineup) ? 'warning' : 'danger';
     }
     
-    $playerName = htmlspecialchars($row['first_name'] . " " . $row['last_name'], ENT_QUOTES, 'UTF-8');
-    $teamName = htmlspecialchars($row['team_name'], ENT_QUOTES, 'UTF-8');
-    $position = htmlspecialchars(str_replace(' ', ', ', $row['pos']), ENT_QUOTES, 'UTF-8');
-    $bats = htmlspecialchars($row['bats'], ENT_QUOTES, 'UTF-8');
+
+
+    $playerName = !empty($row['first_name']) && !empty($row['last_name']) ? htmlspecialchars($row['first_name'] . " " . $row['last_name'], ENT_QUOTES, 'UTF-8') : '';
+
+    $teamName = !empty($row['team_name']) ? htmlspecialchars($row['team_name'], ENT_QUOTES, 'UTF-8') : '';
+
+    $position = !empty($row['pos']) ? htmlspecialchars(str_replace(' ', ', ', $row['pos']), ENT_QUOTES, 'UTF-8') : '';
+
+    $bats = !empty($row['bats']) ? htmlspecialchars($row['bats'], ENT_QUOTES, 'UTF-8') : '';
+    
 
     if (!empty($bbrefPath)) {
         $playerNameHtml .= "<a href='$bbrefUrl' target='_blank'>$playerName</a>"; 
@@ -414,9 +420,11 @@ function showTodaysGame($row) {
                 echo "No weather icon found";
         }
         
-        if (strpos($row['condition'], 'rain') !== false) {
+        if (!empty($row['condition']) && strpos($row['condition'], 'rain') !== false) {
             echo '<span class= "text-danger">' . $row['condition'] . "</span>";
             echo '<div class="weather-summary text-danger">' . $row['temp'] . '°, ' . 'Wind: ' . $row['wind_speed'] . ' ' . $row['wind_direction'] . '</div>';
+        } elseif (empty($row['condition'])) {
+            echo 'No weather icon found';
         }
         else {
             echo $row['condition'];
@@ -460,7 +468,7 @@ function showSplits($throws, $day_night, $home_away, $venue, $row_array) {
                         $away_ops = $row['ops'];
                         break;
                     case 5:
-                        continue;
+                        break;
                     case 6:
                         $day_ops = $row['ops'];
                         break;
@@ -468,7 +476,7 @@ function showSplits($throws, $day_night, $home_away, $venue, $row_array) {
                         $night_ops = $row['ops'];
                         break;
                     default:
-                        continue;
+                        break;
                 }
             }
 

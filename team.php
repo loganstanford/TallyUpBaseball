@@ -10,7 +10,8 @@ try {
     $teamsSQL = "SELECT m.name as 'team_name' FROM `divisions` as d
     JOIN managers as m
     ON d.manager_id = m.id
-    WHERE d.manager_id = $teamID";
+    WHERE d.manager_id = $teamID
+    AND d.year = YEAR(CURDATE())";
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $q = $pdo->query($teamsSQL);
     $q->setFetchMode(PDO::FETCH_ASSOC);
@@ -20,8 +21,8 @@ try {
 $tn = $q->fetch();
 
 // Database call variables
-$pageTitle = $tn['team_name'];
-
+$teamName = $tn['team_name'];
+$pageTitle =  "Team" . $teamName;
 
 // HTTPS Redirector
 redirectHTTPS();
@@ -167,13 +168,26 @@ include 'styles.php';
                                             <?php        
         try {
             $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-            // execute the stored procedure
-            //$daysBack = isset($_GET['days']) ? $_GET['days'] : 999;
-            //$sql = "CALL getTeamStats(5, $daysBack)";
-            $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : '2023-03-30';
+            $currentYear = date("Y");
+            $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : "$currentYear-01-01";
             $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : date("Y-m-d");
-            $sql = "CALL getTeamStatsOnRange($teamID, '$startDate', '$endDate')";
-            // call the stored procedure
+
+            $today = new DateTime();
+            $last7Days = (new DateTime())->sub(new DateInterval('P6D'));
+            $last15Days = (new DateTime())->sub(new DateInterval('P14D'));
+            $last30Days = (new DateTime())->sub(new DateInterval('P29D'));
+
+            // Determine which aggregated table or stored procedure to use
+            if ($startDate == "$currentYear-01-01" && $endDate == $today->format('Y-m-d')) {
+                $table = "agg_stats_ytd";  // Year to date
+            } elseif ($startDate == $last7Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
+                $table = "agg_stats_last7";
+            } elseif ($startDate == $last15Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
+                $table = "agg_stats_last15";
+            } elseif ($startDate == $last30Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
+                $table = "agg_stats_last30";
+            }
+            $sql = "SELECT player_srid as srid, player_first_name as first_name, player_last_name as last_name, team_abbr as team_name, COALESCE(agg.pos, player_positions, 'N/A') as pos, player_status as 'Status', player_bbref as bbref_id, agg.AB, agg.R, agg.H, agg.singles, agg.doubles, agg.triples, agg.RBI, agg.SB, agg.BB, agg.HR, agg.AVG, agg.TB, agg.OBP, agg.SLG, agg.OPS, agg.BABIP, agg.Total_points, agg.bats FROM current_rosters LEFT JOIN $table as agg ON current_rosters.player_srid = agg.srid WHERE manager_id = $teamID ORDER BY Total_points DESC";
             $q = $pdo->query($sql);
             $q->setFetchMode(PDO::FETCH_ASSOC);
             $playerids = array();
@@ -184,6 +198,9 @@ include 'styles.php';
 
                                             <?php while ($r = $q->fetch()): 
                                                 $id = $r['srid'];
+                                                if (empty($id) || strpos($id, 'tmp') !== false) {
+                                                    continue;
+                                                }
                                                 $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
                                                 $game_sql = "CALL getTodaysGame('$id')";
                                                 $gq = $pdo->query($game_sql);
@@ -195,7 +212,7 @@ include 'styles.php';
                                                     <?php 
                                                 array_push($playerids, $r['srid']); 
                                                 $lineup = getLineup($g);
-                                                showPlayerName($r, $injuryIds, $lineup);
+                                                echo showPlayerName($r, $injuryIds, $lineup);
                                                 ?>
                                                 </td>
                                                 <td>
@@ -208,11 +225,11 @@ include 'styles.php';
                                                 <td class="box-stats"><?php echo (is_Null($r['H'])) ? "-" : $r['H']; ?>
                                                 </td>
                                                 <td class="box-stats">
-                                                    <?php echo (is_Null($r['1B'])) ? "-" : $r['1B']; ?></td>
+                                                    <?php echo (is_Null($r['singles'])) ? "-" : $r['singles']; ?></td>
                                                 <td class="box-stats">
-                                                    <?php echo (is_Null($r['2B'])) ? "-" : $r['2B']; ?></td>
+                                                    <?php echo (is_Null($r['doubles'])) ? "-" : $r['doubles']; ?></td>
                                                 <td class="box-stats">
-                                                    <?php echo (is_Null($r['3B'])) ? "-" : $r['3B']; ?></td>
+                                                    <?php echo (is_Null($r['triples'])) ? "-" : $r['triples']; ?></td>
                                                 <td class="box-stats">
                                                     <?php echo (is_Null($r['RBI'])) ? "-" : $r['RBI']; ?></td>
                                                 <td class="box-stats">
@@ -234,7 +251,7 @@ include 'styles.php';
                                                 <td class="box-stats">
                                                     <?php echo (is_Null($r['BABIP'])) ? "-" : $r['BABIP']; ?></td>
                                                 <td class="box-stats total">
-                                                    <?php echo (is_Null($r['Total points'])) ? "0" : $r['Total points']; ?>
+                                                    <?php echo (is_Null($r['Total_points'])) ? "0" : $r['Total_points']; ?>
                                                 </td>
                                             </tr>
                                             <?php endwhile; ?>
