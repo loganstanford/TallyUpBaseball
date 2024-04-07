@@ -5,6 +5,7 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
 import pymysql
+from config import DB_CONNECTION_STRING, API_KEY
 
 # Date
 d = datetime.today()
@@ -13,15 +14,10 @@ month = d.strftime('%m')
 year = d.year
 
 # API
-# Get API key from config file
-config_path = os.path.join(os.path.dirname(__file__), 'config.json')
-with open(config_path, 'r') as config_file:
-    config = json.load(config_file)
-key = config['API_KEY']
-url = f"http://api.sportradar.us/mlb/trial/v7/en/games/{year}/{month}/{day}/schedule.json?api_key={key}"
+url = f"http://api.sportradar.us/mlb/trial/v7/en/games/{year}/{month}/{day}/schedule.json?api_key={API_KEY}"
 
 # SQL engine
-engine = create_engine('mysql+pymysql://c0_baseball:3!cZ6QfrREkoT@192.168.1.80:3306/c0baseball')
+engine = create_engine(DB_CONNECTION_STRING)
 
 # Get schedule
 #   From file

@@ -4,21 +4,16 @@ from datetime import timedelta, datetime
 import pandas as pd
 from sqlalchemy import create_engine, text
 from sqlalchemy.exc import IntegrityError
+from config import DB_CONNECTION_STRING, API_KEY
 
 
 d = datetime.today() - timedelta(days=16)
 
 # Create engine
-engine = create_engine('mysql+pymysql://c0_baseball:3!cZ6QfrREkoT@192.168.1.80:3306/c0baseball')
-
-# Get API key from config file
-config_path = os.path.join(os.path.dirname(__file__), 'config.json')
-with open(config_path, 'r') as config_file:
-    config = json.load(config_file)
-key = config['API_KEY']
+engine = create_engine(DB_CONNECTION_STRING)
 
 def getInjuries():
-    url = f"https://api.sportradar.com/mlb/trial/v7/en/league/injuries.json?api_key={key}"
+    url = f"https://api.sportradar.com/mlb/trial/v7/en/league/injuries.json?api_key={API_KEY}"
     r = requests.get(url)
     result = json.loads(r.content)['teams']
     return result
