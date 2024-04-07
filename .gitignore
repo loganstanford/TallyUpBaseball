@@ -1,1 +1,4 @@
 data/config.py
+includes/dbconfig.inc.php
+logs/
+.vscode/
