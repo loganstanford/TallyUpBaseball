@@ -628,23 +628,40 @@ function showSplits($throws, $day_night, $home_away, $venue, $row_array) {
 }
 
 function splitModal($throws, $day_night, $home_away, $venue, $row_array) {
-    echo '<div class="modal fade" id="'. $row_array[0]['player_id'] .'-split" tabindex="-1" role="dialog" aria-hidden="true">';
-    echo '<div class="modal-dialog modal-dialog-scrollable" role="document">';
-    echo '<div class="modal-content">';
-    echo '<div class="modal-header">';
-    echo '<h4 class="modal-title" id="exampleModalScrollableTitle">';
-    echo $row_array[0]['first_name'] . " " . $row_array[0]['last_name'] . " Splits</h4>";
-    echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
-    echo '<span aria-hidden="true">&times;</span>';
-    echo '</button>';
-    echo '</div>';
-    echo '<div class="modal-body">';
-    echo showSplits($throws, $day_night, $home_away, $venue, $row_array);
-    echo '</div>';
-    echo '<div class="modal-footer">';
-    echo '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
-    echo '</div>';
+    // Check if $row_array is not empty
+    if (!empty($row_array)) {
+        echo '<div class="modal fade" id="'. $row_array[0]['player_id'] .'-split" tabindex="-1" role="dialog" aria-hidden="true">';
+        echo '<div class="modal-dialog modal-dialog-scrollable" role="document">';
+        echo '<div class="modal-content">';
+        echo '<div class="modal-header">';
+        echo '<h4 class="modal-title" id="exampleModalScrollableTitle">';
+        echo $row_array[0]['first_name'] . " " . $row_array[0]['last_name'] . " Splits</h4>";
+        echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+        echo '<span aria-hidden="true">&times;</span>';
+        echo '</button>';
+        echo '</div>';
+        echo '<div class="modal-body">';
+        echo showSplits($throws, $day_night, $home_away, $venue, $row_array);
+        echo '</div>';
+        echo '<div class="modal-footer">';
+        echo '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    } else {
+        // Handle case where $row_array is empty
+        echo '<div class="modal fade" id="empty-split" tabindex="-1" role="dialog" aria-hidden="true">';
+        echo '<div class="modal-dialog" role="document">';
+        echo '<div class="modal-content">';
+        echo '<div class="modal-body">';
+        echo 'No splits available.';
+        echo '</div>';
+        echo '<div class="modal-footer">';
+        echo '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    }
 }
