@@ -192,7 +192,7 @@ redirectHTTPS();
                                                 $g = $gq->fetch();
                                             ?>
                                                 <tr>
-                                                    <td>
+                                                    <td class="player-name">
                                                         <?php
                                                         array_push($playerids, $r['srid']);
                                                         $lineup = getLineup($g);
@@ -200,7 +200,7 @@ redirectHTTPS();
 
                                                         ?>
                                                     </td>
-                                                    <td>
+                                                    <td class="todays-game">
                                                         <?php showTodaysGame($g);
                                                         try {
                                                             $playerId = $r['srid'];

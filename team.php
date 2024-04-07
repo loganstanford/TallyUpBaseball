@@ -208,14 +208,14 @@ include 'styles.php';
                                                 $g = $gq->fetch();
                                                 ?>
                                             <tr>
-                                                <td>
+                                                <td class="player-name">
                                                     <?php 
                                                 array_push($playerids, $r['srid']); 
                                                 $lineup = getLineup($g);
                                                 echo showPlayerName($r, $injuryIds, $lineup);
                                                 ?>
                                                 </td>
-                                                <td>
+                                                <td class="todays-game">
                                                     <?php showTodaysGame($g); ?>
                                                 </td>
                                                 <td class="box-stats">
