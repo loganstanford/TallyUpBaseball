@@ -20,7 +20,6 @@ redirectHTTPS();
     include 'styles.php';
     ?>
 </head>
-<?php require_once 'dbconfig.php'; ?>
 
 <body class="hold-transition sidebar-mini dark-mode">
     <div id="loading-overlay">
@@ -197,7 +196,7 @@ redirectHTTPS();
                                                         <?php
                                                         array_push($playerids, $r['srid']);
                                                         $lineup = getLineup($g);
-                                                        showPlayerName($r, $injuryIds, $lineup);
+                                                        echo showPlayerName($r, $injuryIds, $lineup);
 
                                                         ?>
                                                     </td>
