@@ -155,27 +155,33 @@ redirectHTTPS();
                                             <?php
                                             try {
                                                 $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-
                                                 $currentYear = date("Y");
                                                 $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : "$currentYear-01-01";
                                                 $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : date("Y-m-d");
-
-                                                $today = new DateTime();
-                                                $last7Days = (new DateTime())->sub(new DateInterval('P6D'));
-                                                $last15Days = (new DateTime())->sub(new DateInterval('P14D'));
-                                                $last30Days = (new DateTime())->sub(new DateInterval('P29D'));
-
+                                            
+                                                $today = date('Y-m-d');
+                                                $yesterday = date('Y-m-d', strtotime('-1 day'));
+                                                $last7Days = date('Y-m-d', strtotime('-6 days')); 
+                                                $last15Days = date('Y-m-d', strtotime('-14 days'));
+                                                $last30Days = date('Y-m-d', strtotime('-29 days'));
+                                            
                                                 // Determine which aggregated table or stored procedure to use
-                                                if ($startDate == "$currentYear-01-01" && $endDate == $today->format('Y-m-d')) {
-                                                    $sql = "SELECT * FROM agg_stats_ytd ORDER BY Total_Points DESC LIMIT 100";  // Year-to-date
-                                                } elseif ($startDate == $last7Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
-                                                    $sql = "SELECT * FROM agg_stats_last7 ORDER BY Total_Points DESC LIMIT 100";  // Last 7 days
-                                                } elseif ($startDate == $last15Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
-                                                    $sql = "SELECT * FROM agg_stats_last15 ORDER BY Total_Points DESC LIMIT 100";  // Last 15 days
-                                                } elseif ($startDate == $last30Days->format('Y-m-d') && $endDate == $today->format('Y-m-d')) {
-                                                    $sql = "SELECT * FROM agg_stats_last30 ORDER BY Total_Points DESC LIMIT 100";  // Last 30 days
+                                                if ($startDate == "$currentYear-01-01" && $endDate == $today) {
+                                                    $table = "agg_stats_ytd";  // Year to date
+                                                } elseif ($startDate == $yesterday && $endDate == $yesterday) {
+                                                    $table = "agg_stats_yesterday";
+                                                } elseif ($startDate == $last7Days && $endDate == $today) {
+                                                    $table = "agg_stats_last7";
+                                                } elseif ($startDate == $last15Days && $endDate == $today) {
+                                                    $table = "agg_stats_last15";
+                                                } elseif ($startDate == $last30Days && $endDate == $today) {
+                                                    $table = "agg_stats_last30";
+                                                }
+                                                // SQL uses the $table variable, make sure it's defined before you create the SQL
+                                                if (isset($table)) {
+                                                    $sql = "SELECT player_srid as srid, player_first_name as first_name, player_last_name as last_name, team_abbr as team_name, COALESCE(agg.pos, player_positions, 'N/A') as pos, player_status as 'Status', player_bbref as bbref_id, agg.AB, agg.R, agg.H, agg.singles, agg.doubles, agg.triples, agg.RBI, agg.SB, agg.BB, agg.HR, agg.AVG, agg.TB, agg.OBP, agg.SLG, agg.OPS, agg.BABIP, agg.Total_points, agg.bats FROM current_rosters LEFT JOIN $table as agg ON current_rosters.player_srid = agg.srid ORDER BY Total_points DESC";
                                                 } else {
-                                                    $sql = "CALL getAllPlayerStats('$startDate', '$endDate')";  // Custom range
+                                                    $sql = "CALL getAllPlayerStats('$startDate', '$endDate')";
                                                 }
 
                                                 $q = $pdo->query($sql);
