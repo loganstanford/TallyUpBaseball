@@ -1,5 +1,10 @@
 data/config.py
+data/__pycache__
+
 dbconfig.inc.php
+
 logs/
-.vscode/
 *.log
+
+.vscode/
+
