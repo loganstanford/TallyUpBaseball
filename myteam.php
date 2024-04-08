@@ -332,7 +332,7 @@ include 'styles.php';
                                                 echo showPlayerName($r, $injuryIds, $lineup);
                                                 ?>
                                                 </td>
-                                                <td>
+                                                <td class="todays-game">
                                                     <?php 
                                                     showTodaysGame($g);
                                                     try {
@@ -448,12 +448,12 @@ include 'styles.php';
                                                 $gq->setFetchMode(PDO::FETCH_ASSOC);
                                                 $g = $gq->fetch();?>
                                             <tr>
-                                                <td>
+                                                <td class="player-name">
                                                     <?php 
                                                 $lineup = getLineup($g);
                                                 echo showPlayerName($r, $injuryIds, $lineup); ?>
                                                 </td>
-                                                <td><?php 
+                                                <td class="todays-game"><?php 
                                                     showTodaysGame($g);
                                                     ?></td>
                                                 <td class="box-stats"><?php echo $r['AB']; ?></td>
@@ -551,8 +551,70 @@ include 'styles.php';
 
     <!-- Page specific script -->
     <script>
-    <?php include 'baseball-datatables.php';?>
-    <?php include 'scripts.js';?>
+    $(function() {
+        $('.hitters-pos').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "order": [7, 'desc'],
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "columnDefs": [{
+                    responsivePriority: 1,
+                    targets: 0
+                },
+                {
+                    responsivePriority: 2,
+                    targets: -1
+                },
+            ]
+        });
+        $('#hitters-all').removeAttr('width').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "order": [18, 'desc'],
+            "info": false,
+            "autoWidth": false,
+            "responsive": false,
+            "fixedColumns": true,
+            "scrollX": true,
+            "columnDefs": [{
+                    width: 120,
+                    targets: 0
+                },
+                {
+                    width: 300,
+                    targets: 1
+                }
+            ]
+        });
+        $('#pitching').removeAttr('width').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "searching": false,
+            "ordering": true,
+            "order": [5, 'desc'],
+            "info": false,
+            "autoWidth": false,
+            "responsive": false,
+            "fixedColumns": true,
+            "scrollX": true,
+            "columnDefs": [{
+                    width: 200,
+                    targets: 0
+                },
+                {
+                    width: 300,
+                    targets: 1
+                }
+            ]
+        });
+    });
+
     function copyLineupToClipboard() {
         var text = "";
         $('.player-select').each(function() {
