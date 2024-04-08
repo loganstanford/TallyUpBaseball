@@ -5,6 +5,9 @@ require_once 'includes/includes.php';
 // Page variables
 $teamID = $_GET['teamID'];
 
+// Start sessino
+session_start();
+
 // Database calls
 try {
     $teamsSQL = "SELECT m.name as 'team_name' FROM `divisions` as d
@@ -660,7 +663,7 @@ include 'styles.php';
             'Last 30 Days': [moment().subtract(29, 'days'), moment()],
             'This Month': [moment().startOf('month'), moment().endOf('month')],
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-            'Year to date': [moment('2023-03-30', 'YYYY-MM-DD'), moment()]
+            'Year to date': [moment().startOf('year'), moment()]
             }
         }, cb);
 
