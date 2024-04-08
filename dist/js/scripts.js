@@ -107,7 +107,7 @@ $(function() {
             var start = params.start_date;
         }
         else {
-            var start = '2023-03-30';
+            var start = moment().startOf('year');
         }
         if (params.end_date != null) {
             var end = params.end_date;
@@ -137,7 +137,7 @@ $(function() {
         else if (start == moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD') && end == moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')) {
             $('#daterange-btn span').html("Last Month");
         }
-        else if (start == '2023-03-30' && end == moment().format('YYYY-MM-DD')) {
+        else if (start == moment().startOf('year') && end == moment().format('YYYY-MM-DD')) {
             $('#daterange-btn span').html("Year to date");
         }
         else {
@@ -161,7 +161,7 @@ $(function() {
             var start = moment(params.start_date, 'YYYY-MM-DD');
         }
         else {
-            var start = moment('2023-03-30', 'YYYY-MM-DD');
+            var start = moment().startOf('year');
         }
         return start;
     }
@@ -189,20 +189,25 @@ $(function() {
 
 
     function cb(start, end) {
-        // Default option if no start of end
         $('#daterange-btn span').html(start.format('MMMM D') + ' - ' + end.format('MMMM D'));
-        //var url = "http://tallyfantasy.com/myteam.php"+'?';
-        var url = '?';
-        var startDate = start ? start.format('YYYY-MM-DD') : '';
-        var endDate = end ? end.format('YYYY-MM-DD') : '';
-        var params = {};
-        if(startDate && endDate){
-            params.start_date =  startDate;
-            params.end_date =  endDate;
-        }
-        url+= jQuery.param( params );
-        location.href = url
+    
+        // Grab the base URL and discard any existing query parameters
+        var baseUrl = window.location.href.split('?')[0]; 
+    
+        // Initialize the params object with any other parameters you want to preserve
+        var params = new URLSearchParams(window.location.search);
+    
+        // Set the start and end dates
+        if (start) params.set('start_date', start.format('YYYY-MM-DD'));
+        if (end) params.set('end_date', end.format('YYYY-MM-DD'));
+    
+        // Build the final URL
+        var url = baseUrl + '?' + params.toString();
+        
+        // Update the location
+        location.href = url;
     }
+    
 
     $('#daterange-btn').daterangepicker({
         startDate: start,
@@ -215,7 +220,7 @@ $(function() {
         'Last 30 Days': [moment().subtract(29, 'days'), moment()],
         'This Month': [moment().startOf('month'), moment().endOf('month')],
         'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-        'Year to date': [moment('2023-03-30', 'YYYY-MM-DD'), moment()]
+        'Year to date': [moment().startOf('year'), moment()]
         }
     }, cb);
 
