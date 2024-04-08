@@ -381,6 +381,12 @@ function getLineup($g) {
 function showTodaysGame($row) {
     echo '<div class="row">';
     echo '<div class="col-6">';
+    
+    if (empty($row['Opponent']) || empty($row['Time'])) {
+        echo "No game today";
+        return; // Early exit from the function
+    }
+
     if (isset($row['player_id'])) {
         echo '<a onclick="showModal(' . "'" . $row['player_id'] . "-split')". '">' . $row['Opponent'] . " " . ltrim($row['Time'], "0") . '</a>';                                         
     }
