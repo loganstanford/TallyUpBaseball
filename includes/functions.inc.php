@@ -417,14 +417,14 @@ function showTodaysGame($row) {
                 echo '<img class="weather-icon" src="weather_icons/rain.png">';
                 break;
             default:
-                echo "No weather icon found";
+                echo "";
         }
         
         if (!empty($row['condition']) && strpos($row['condition'], 'rain') !== false) {
             echo '<span class= "text-danger">' . $row['condition'] . "</span>";
             echo '<div class="weather-summary text-danger">' . $row['temp'] . '°, ' . 'Wind: ' . $row['wind_speed'] . ' ' . $row['wind_direction'] . '</div>';
         } elseif (empty($row['condition'])) {
-            echo 'No weather icon found';
+            echo '';
         }
         else {
             echo $row['condition'];
