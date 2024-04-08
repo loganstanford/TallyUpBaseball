@@ -179,7 +179,7 @@ redirectHTTPS();
                                                 }
                                                 // SQL uses the $table variable, make sure it's defined before you create the SQL
                                                 if (isset($table)) {
-                                                    $sql = "SELECT player_srid as srid, player_first_name as first_name, player_last_name as last_name, team_abbr as team_name, COALESCE(agg.pos, player_positions, 'N/A') as pos, player_status as 'Status', player_bbref as bbref_id, agg.AB, agg.R, agg.H, agg.singles, agg.doubles, agg.triples, agg.RBI, agg.SB, agg.BB, agg.HR, agg.AVG, agg.TB, agg.OBP, agg.SLG, agg.OPS, agg.BABIP, agg.Total_points, agg.bats FROM current_rosters LEFT JOIN $table as agg ON current_rosters.player_srid = agg.srid ORDER BY Total_points DESC";
+                                                    $sql = "SELECT player_srid as srid, player_first_name as first_name, player_last_name as last_name, team_abbr as team_name, COALESCE(agg.pos, player_positions, 'N/A') as pos, player_status as 'Status', player_bbref as bbref_id, agg.AB, agg.R, agg.H, agg.singles, agg.doubles, agg.triples, agg.RBI, agg.SB, agg.BB, agg.HR, agg.AVG, agg.TB, agg.OBP, agg.SLG, agg.OPS, agg.BABIP, agg.Total_points, agg.bats FROM current_rosters LEFT JOIN $table as agg ON current_rosters.player_srid = agg.srid WHERE Total_points > 0 ORDER BY Total_points DESC";
                                                 } else {
                                                     $sql = "CALL getAllPlayerStats('$startDate', '$endDate')";
                                                 }
@@ -258,7 +258,7 @@ redirectHTTPS();
                                                     <td class="box-stats">
                                                         <?php echo (is_Null($r['OPS'])) ? "-" : $r['OPS']; ?></td>
                                                     <td class="box-stats">
-                                                        <?php echo (is_Null($r['team_name'])) ? "FA" : $r['team_name']; ?></td>
+                                                        <?php echo (is_Null($r['manager_name'])) ? "FA" : $r['manager_name']; ?></td>
                                                     <td class="box-stats total">
                                                         <?php echo (is_Null($r['Total_points'])) ? "0" : $r['Total_points']; ?>
                                                     </td>
