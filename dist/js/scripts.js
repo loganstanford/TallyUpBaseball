@@ -137,7 +137,7 @@ $(function() {
         else if (start == moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD') && end == moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD')) {
             $('#daterange-btn span').html("Last Month");
         }
-        else if (start == moment().startOf('year') && end == moment().format('YYYY-MM-DD')) {
+        else if (start == moment().startOf('year').format('YYYY-MM-DD') && end == moment().format('YYYY-MM-DD')) {
             $('#daterange-btn span').html("Year to date");
         }
         else {
