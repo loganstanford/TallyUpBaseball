@@ -397,7 +397,12 @@ function showTodaysGame($row) {
     echo '</div>';
     echo '<div class="col-6 weather">';
     if ($row['v_type'] == 'outdoor') {
-        switch($row['condition']) {
+        $condition = trim($row['condition']);
+        if (stripos($condition, "Patchy rain") !== false) {
+            // Contains "Patchy rain"
+            echo '<img class="weather-icon" src="weather_icons/rain.png">';
+        } else {
+        switch($condition) {
             case "Sunny":
                 echo '<img class="weather-icon visible-sm-block hidden-sm" src="weather_icons/sunny.png">';
                 break;
@@ -419,6 +424,7 @@ function showTodaysGame($row) {
             default:
                 echo "";
         }
+    }
         
         if (!empty($row['condition']) && strpos($row['condition'], 'rain') !== false) {
             echo '<span class= "text-danger">' . $row['condition'] . "</span>";
