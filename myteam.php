@@ -55,6 +55,9 @@ include 'styles.php';
 </head>
 
 <body class="hold-transition sidebar-mini dark-mode">
+    <div id="loading-overlay">
+        <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGtjZ2hvZDZyZmF4enViazRnYW92N213bTA5eDI5ZWVicHM5d2MzNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/1Aftgizz0ekprKsRHJ/giphy.gif" alt="Loading..." id="loading-image">
+    </div>
     <div class="wrapper">
         <?php include 'nav.php';?>
         <?php include 'side-menu.php';?>
