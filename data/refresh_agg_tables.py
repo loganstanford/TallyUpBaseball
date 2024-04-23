@@ -14,7 +14,7 @@ with engine.connect() as connection:
     for table in tables:
         truncate_query = text(f"TRUNCATE TABLE {table}")
         connection.execute(truncate_query)
-        call_proc = text(f"CALL `update-{table}`()")
+        call_proc = text(f"CALL `update_{table}`()")
         connection.execute(call_proc)
 
     connection.commit()
