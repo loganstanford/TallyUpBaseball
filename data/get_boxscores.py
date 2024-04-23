@@ -461,25 +461,28 @@ def insert_probable_pitcher(game, t, game_id, team_id, conn):
                 "game_id": game_id,
                 "team_id": team_id,
                 "player_id": game[t]['probable_pitcher'].get('id', ''),
-                "era": float(game[t]['probable_pitcher'].get('era', 0)),  # Assuming ERA is provided as a string
+                "era": float(game[t]['probable_pitcher'].get('era', 0)) if game[t]['probable_pitcher'].get('era') else 0,
                 "wins": game[t]['probable_pitcher'].get('win', 0),
-                "losses": game[t]['probable_pitcher'].get('loss', 0)
+                "losses": game[t]['probable_pitcher'].get('loss', 0),
             }
-            # Deleting existing probable pitcher data
-            delete_sql = "DELETE FROM mlb_pitchers WHERE game_id = :game_id AND team_id = :team_id AND player_id = :player_id"
-            conn.execute(delete_sql, {'game_id': game_id, 'team_id': team_id, 'player_id': pitcher_stats['player_id']})
-            conn.commit()
-            
-            # Inserting new probable pitcher data
-            pitcher_df = pd.DataFrame([pitcher_stats])
-            pitcher_df.to_sql('mlb_pitchers', con=conn, if_exists='append', index=False)
-            logging.debug("Successfully inserted probable pitcher data for game %s, team %s", game_id, team_id)
+            logging.debug("Successfully created probable pitcher dict: %s", pitcher_stats)
+            trans = conn.begin()  # Start a transaction
+            try:
+                delete_sql = "DELETE FROM mlb_pitchers WHERE game_id = :game_id AND team_id = :team_id AND player_id = :player_id"
+                conn.execute(delete_sql, {'game_id': game_id, 'team_id': team_id, 'player_id': pitcher_stats['player_id']})
+                
+                insert_sql = "INSERT INTO mlb_pitchers (game_id, team_id, player_id, era, wins, losses) VALUES (:game_id, :team_id, :player_id, :era, :wins, :losses)"
+                conn.execute(insert_sql, pitcher_stats)
+                trans.commit()  # Commit both operations as a transaction
+                logging.debug("Successfully processed probable pitcher data for game %s, team %s", game_id, team_id)
+            except Exception as e:
+                trans.rollback()  # Rollback the transaction on error
+                raise e  # Re-raise the exception to handle it outside
 
     except IntegrityError as ie:
         logging.warning("Record already exists for game %s, team %s: %s", game_id, team_id, ie)
     except Exception as e:
         logging.critical("Error processing probable pitcher for game %s, team %s: %s", game_id, team_id, e)
-
 
 games_json = get_sportsradar_games_daily(d)
 for g in games_json:
