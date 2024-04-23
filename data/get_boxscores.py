@@ -470,7 +470,9 @@ def insert_probable_pitcher(game, t, game_id, team_id, conn):
             logging.debug("Successfully created probable pitcher dict: %s", pitcher_stats)
             trans = conn.begin()  # Start a transaction
             try:
-                delete_sql = "DELETE FROM mlb_pitchers WHERE game_id = :game_id AND team_id = :team_id AND player_id = :player_id"
+                delete_sql = text(""" 
+                    DELETE FROM mlb_pitchers
+                    WHERE game_id = :game_id AND team_id = :team_id AND player_id = :player_id""")
                 conn.execute(delete_sql, {'game_id': game_id, 'team_id': team_id, 'player_id': pitcher_stats['player_id']})
                 
                 insert_sql = "INSERT INTO mlb_pitchers (game_id, team_id, player_id, era, wins, losses) VALUES (:game_id, :team_id, :player_id, :era, :wins, :losses)"
