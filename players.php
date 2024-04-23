@@ -490,9 +490,9 @@ redirectHTTPS();
             var activePosition = $('#custom-filters .active').data('position');
             if (activePosition) {
                 var positions = activePosition.toString().split(
-                ','); // Split active positions into an array
+                    ','); // Split active positions into an array
                 var fieldPositions = data[0].replace(/[{}]/g,
-                ''); // Remove curly braces and split by comma
+                    ''); // Remove curly braces and split by comma
                 var positionsInField = fieldPositions.split(',');
 
                 return positions.some(position => positionsInField.includes(position.trim()));
@@ -511,6 +511,8 @@ redirectHTTPS();
             table.draw(); // Redraw the DataTable without any filters
         });
     });
+
+    table.DataTable();
     </script>
 
 </body>
