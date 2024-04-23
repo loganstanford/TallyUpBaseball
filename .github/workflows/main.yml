@@ -3,18 +3,19 @@ name: FTP Deploy
 on:
   push:
     branches:
-      - main  
+      - main
+      - noPositionFilter
 jobs:
   ftp-deploy:
     runs-on: ubuntu-latest
     environment: Production
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: FTP Deploy Action
-      uses: SamKirkland/FTP-Deploy-Action@4.0.0
-      with:
-        server: 217.180.196.211
-        username: ${{ secrets.FTP_USERNAME }}  
-        password: ${{ secrets.FTP_PASSWORD }}  
-        server-dir: ./web/  
+      - name: FTP Deploy Action
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: 217.180.196.211
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ./web/
