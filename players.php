@@ -206,7 +206,8 @@ redirectHTTPS();
                                                     agg.last_name AS last_name, 
                                                     agg.team_abbreviation AS team_name, 
                                                     agg.manager_name AS manager_name, 
-                                                    COALESCE(agg.pos, 'N/A') AS pos, 
+                                                    COALESCE(agg.pos, 'N/A') AS pos,
+                                                    agg.qualified_positions AS qualified_positions, 
                                                     agg.Status AS `Status`, 
                                                     agg.bbref_id AS bbref_id, 
                                                     agg.AB, 
@@ -253,6 +254,7 @@ redirectHTTPS();
                                                 $g = $gq->fetch();
                                             ?>
                                             <tr>
+                                                <td class="d-none"><?php $r['qualified_positions'] ?></td>
                                                 <td class="player-name">
                                                     <?php
                                                         array_push($playerids, $r['srid']);
@@ -457,27 +459,28 @@ redirectHTTPS();
         filterColumn('FA');
     });
 
+    // Custom search function to filter data based on the position
     $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        var position = $('#custom-filters .active').data('position');
-        if (position) {
-            var positions = position.split(','); // Split the positions into an array
-            var fieldPosition = data[4]; // Adjust this index to match the 'Field Position' column in your table
-            return positions.includes(fieldPosition);
+        var activePosition = $('#custom-filters .active').data('position');
+        if (activePosition) {
+            var positions = activePosition.toString().split(',');
+            var fieldPositions = data[0]; // Assume position data is in the first column; adjust if necessary
+            return positions.some(position => fieldPositions.includes(position));
         }
-        return true; // show all rows when no filter is active
+        return true; // Return all rows if no filter is active
     });
 
-    // Click event for filter buttons
+    // Event listener for position filter buttons
     $('#custom-filters .filter-button').on('click', function() {
         $('#custom-filters .filter-button').removeClass('active');
-        $(this).addClass('active'); // Add 'active' class to highlight the button
-        table.draw(); // Redraw the DataTable with the filter applied
+        $(this).addClass('active'); // Highlight the active button
+        table.draw(); // Redraw the DataTable with the new filter
     });
 
-    // Reset filter button
+    // Event listener for the reset filter button
     $('#reset-filter').on('click', function() {
         $('#custom-filters .filter-button').removeClass('active');
-        table.draw(); // Redraw the DataTable with no filters
+        table.draw(); // Redraw the DataTable without any filters
     });
     </script>
 </body>
