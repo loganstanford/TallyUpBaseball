@@ -138,10 +138,10 @@ redirectHTTPS();
                                         <button class="btn btn-secondary filter-button" data-position="4">2B</button>
                                         <button class="btn btn-secondary filter-button" data-position="5">3B</button>
                                         <button class="btn btn-secondary filter-button" data-position="6">SS</button>
-                                        <button class="btn btn-secondary filter-button" data-position="7">LF</button>
-                                        <button class="btn btn-secondary filter-button" data-position="8">CF</button>
-                                        <button class="btn btn-secondary filter-button" data-position="9">RF</button>
+                                        <button class="btn btn-secondary filter-button"
+                                            data-position="7,8,9">OF</button>
                                         <button class="btn btn-secondary filter-button" data-position="10">DH</button>
+                                        <button id="reset-filter" class="btn btn-primary">Reset Filter</button>
                                     </div>
 
                                 </div>
@@ -455,6 +455,29 @@ redirectHTTPS();
 
     $('#free-agent').on('click', function() {
         filterColumn('FA');
+    });
+
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        var position = $('#custom-filters .active').data('position');
+        if (position) {
+            var positions = position.split(','); // Split the positions into an array
+            var fieldPosition = data[4]; // Adjust this index to match the 'Field Position' column in your table
+            return positions.includes(fieldPosition);
+        }
+        return true; // show all rows when no filter is active
+    });
+
+    // Click event for filter buttons
+    $('#custom-filters .filter-button').on('click', function() {
+        $('#custom-filters .filter-button').removeClass('active');
+        $(this).addClass('active'); // Add 'active' class to highlight the button
+        table.draw(); // Redraw the DataTable with the filter applied
+    });
+
+    // Reset filter button
+    $('#reset-filter').on('click', function() {
+        $('#custom-filters .filter-button').removeClass('active');
+        table.draw(); // Redraw the DataTable with no filters
     });
     </script>
 </body>
