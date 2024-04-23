@@ -199,7 +199,6 @@ redirectHTTPS();
                                                 } elseif ($startDate == $last30Days && $endDate == $today) {
                                                     $table = "agg_stats_last30";
                                                 }
-                                                print_r($table);
                                                 // SQL uses the $table variable, make sure it's defined before you create the SQL
                                                 if (isset($table)) {
                                                     $sql = "SELECT 
