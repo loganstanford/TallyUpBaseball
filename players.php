@@ -256,7 +256,7 @@ redirectHTTPS();
                                                 $g = $gq->fetch();
                                             ?>
                                             <tr>
-                                                <td class="d-none"><?php $r['qualified_positions'] ?></td>
+                                                <td class="d-none"><?php echo $r['qualified_positions'] ?></td>
                                                 <td class="player-name">
                                                     <?php
                                                         array_push($playerids, $r['srid']);
