@@ -427,11 +427,7 @@ def insert_lineup_data(game_data, game_id, team_id):
         trans = connection.begin()
         
         for player in game_data['lineup']:
-            sql = text("""
-                INSERT INTO mlb_lineups2 (game_id, team_id, player_id, batting_order, field_position_id, inning, `order`, sequence, inning_half, inserted_at)
-                VALUES (:game_id, :team_id, :player_id, :batting_order, :field_position_id, :inning, :order, :sequence, :inning_half, :inserted_at)
-            """)
-            connection.execute(sql, {
+            player_dict = {
                 'game_id': game_id,
                 'team_id': team_id,
                 'player_id': player['id'],
@@ -442,7 +438,13 @@ def insert_lineup_data(game_data, game_id, team_id):
                 'sequence': player['sequence'],
                 'inning_half': player.get('inning_half', ''),
                 'inserted_at': datetime.datetime.now()
-            })
+            }
+            logging.debug("Successfully created player dict: %s", player_dict)
+            sql = text("""
+                INSERT INTO mlb_lineups2 (game_id, team_id, player_id, batting_order, field_position_id, inning, `order`, sequence, inning_half, inserted_at)
+                VALUES (:game_id, :team_id, :player_id, :batting_order, :field_position_id, :inning, :order, :sequence, :inning_half, :inserted_at)
+            """)
+            connection.execute(sql, player_dict)
         
         # Commit the transaction
         trans.commit()
