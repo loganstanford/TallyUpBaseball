@@ -404,7 +404,7 @@ redirectHTTPS();
 
     <!-- Page specific script -->
     <script>
-    $('#hitters-all').removeAttr('width').DataTable({
+    /*    $('#hitters-all').removeAttr('width').DataTable({
         "paging": true,
         "lengthChange": false,
         "searching": true,
@@ -427,7 +427,7 @@ redirectHTTPS();
                 targets: 1
             }
         ]
-    });
+    }); */
     $('#pitching').removeAttr('width').DataTable({
         "paging": false,
         "lengthChange": false,
@@ -454,59 +454,65 @@ redirectHTTPS();
         table.column(17).search(value).draw();
     }
 
-    var table = $('#hitters-all').DataTable({
-        paging: true,
-        lengthChange: false,
-        searching: true,
-        ordering: true,
-        order: [
-            [18, "desc"],
-            [2, "desc"]
-        ],
-        info: false,
-        autoWidth: false,
-        responsive: false,
-        fixedColumns: true,
-        scrollX: true,
-        columnDefs: [{
-                width: 130,
-                targets: 0
-            },
-            {
-                width: 340,
-                targets: 1
-            }
-        ]
-    });
 
     $('#free-agent').on('click', function() {
         filterColumn('FA');
     });
+    </script>
+    <script>
+    $(document).ready(function() {
+        var table = $('#hitters-all').DataTable({
+            paging: true,
+            lengthChange: false,
+            searching: true,
+            ordering: true,
+            order: [
+                [18, "desc"],
+                [2, "desc"]
+            ],
+            info: false,
+            autoWidth: false,
+            responsive: false,
+            fixedColumns: true,
+            scrollX: true,
+            columnDefs: [{
+                    width: 130,
+                    targets: 0
+                },
+                {
+                    width: 340,
+                    targets: 1
+                }
+            ]
+        });
 
-    // Custom search function to filter data based on the position
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        var activePosition = $('#custom-filters .active').data('position');
-        if (activePosition) {
-            var positions = activePosition.toString().split(',');
-            var fieldPositions = data[0]; // Assume position data is in the first column; adjust if necessary
-            return positions.some(position => fieldPositions.includes(position));
-        }
-        return true; // Return all rows if no filter is active
-    });
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            var activePosition = $('#custom-filters .active').data('position');
+            if (activePosition) {
+                var positions = activePosition.toString().split(
+                ','); // Split active positions into an array
+                var fieldPositions = data[0].replace(/[{}]/g,
+                ''); // Remove curly braces and split by comma
+                var positionsInField = fieldPositions.split(',');
 
-    // Event listener for position filter buttons
-    $('#custom-filters .filter-button').on('click', function() {
-        $('#custom-filters .filter-button').removeClass('active');
-        $(this).addClass('active'); // Highlight the active button
-        table.draw(); // Redraw the DataTable with the new filter
-    });
+                return positions.some(position => positionsInField.includes(position.trim()));
+            }
+            return true; // Show all rows if no filter is active
+        });
 
-    // Event listener for the reset filter button
-    $('#reset-filter').on('click', function() {
-        $('#custom-filters .filter-button').removeClass('active');
-        table.draw(); // Redraw the DataTable without any filters
+        $('#custom-filters .filter-button').on('click', function() {
+            $('#custom-filters .filter-button').removeClass('active');
+            $(this).addClass('active'); // Highlight the active button
+            table.draw(); // Redraw the DataTable with the new filter
+        });
+
+        $('#reset-filter').on('click', function() {
+            $('#custom-filters .filter-button').removeClass('active');
+            table.draw(); // Redraw the DataTable without any filters
+        });
     });
     </script>
+
 </body>
 
 </html>
