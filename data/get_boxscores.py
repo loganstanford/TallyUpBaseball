@@ -420,6 +420,69 @@ def process_player_box_data(player_box, game_id, conn):
     except Exception as e:
         logging.critical(f"Error inserting player_box data for game {game_id}, player {player_box['player_sportsradar_id']}: {e}")
 
+def insert_lineup_data(game_data, game_id, team_id):
+    connection = engine.connect()
+    try:
+        # Start a transaction
+        trans = connection.begin()
+        
+        for player in game_data['lineup']:
+            sql = text("""
+                INSERT INTO mlb_lineups2 (game_id, team_id, player_id, batting_order, field_position_id, inning, `order`, sequence, inning_half, game_date, inserted_at)
+                VALUES (:game_id, :team_id, :player_id, :batting_order, :field_position_id, :inning, :order, :sequence, :inning_half, :game_date, :inserted_at)
+            """)
+            connection.execute(sql, {
+                'game_id': game_id,
+                'team_id': team_id,
+                'player_id': player['id'],
+                'batting_order': player['order'],
+                'field_position_id': player['position'],
+                'inning': player['inning'],
+                'order': player['order'],
+                'sequence': player['sequence'],
+                'inning_half': player.get('inning_half', ''),
+                'game_date': datetime.date.today(),  # assuming the game is today, adjust accordingly
+                'inserted_at': datetime.datetime.now()
+            })
+        
+        # Commit the transaction
+        trans.commit()
+        print("Lineup data successfully inserted.")
+    except Exception as e:
+        # Rollback the transaction on error
+        trans.rollback()
+        print(f"An error occurred: {e}")
+    finally:
+        connection.close()
+
+def insert_probable_pitcher(game, t, game_id, team_id, conn):
+    try:
+        if 'probable_pitcher' in game[t]:
+            pitcher_stats = {
+                "game_id": game_id,
+                "team_id": team_id,
+                "player_id": game[t]['probable_pitcher'].get('id', ''),
+                "era": float(game[t]['probable_pitcher'].get('era', 0)),  # Assuming ERA is provided as a string
+                "wins": game[t]['probable_pitcher'].get('win', 0),
+                "losses": game[t]['probable_pitcher'].get('loss', 0),
+                "game_date": datetime.date.today()  # Adjust as necessary
+            }
+            # Deleting existing probable pitcher data
+            delete_sql = "DELETE FROM mlb_pitchers WHERE game_id = :game_id AND team_id = :team_id AND player_id = :player_id"
+            conn.execute(delete_sql, {'game_id': game_id, 'team_id': team_id, 'player_id': pitcher_stats['player_id']})
+            conn.commit()
+            
+            # Inserting new probable pitcher data
+            pitcher_df = pd.DataFrame([pitcher_stats])
+            pitcher_df.to_sql('mlb_pitchers', con=conn, if_exists='append', index=False)
+            logging.debug("Successfully inserted probable pitcher data for game %s, team %s", game_id, team_id)
+
+    except IntegrityError as ie:
+        logging.warning("Record already exists for game %s, team %s: %s", game_id, team_id, ie)
+    except Exception as e:
+        logging.critical("Error processing probable pitcher for game %s, team %s: %s", game_id, team_id, e)
+
+
 games_json = get_sportsradar_games_daily(d)
 for g in games_json:
     game = g['game']
@@ -464,10 +527,12 @@ for g in games_json:
             # Process probable pitcher
             if 'probable_pitcher' in game[t]:
                 process_probable_pitcher(game, t, game_id, team_id, conn)
+                insert_probable_pitcher(game, t, game_id, team_id, conn)
 
             # Submit lineups and starters
             if 'lineup' in game[t]:
                 process_lineups(game, t, game_id, team_id, conn)
+                insert_lineup_data(game[t], game_id, team_id, conn)
 
             # Get team pitching stats
             if 'statistics' in game[t] and 'pitching' in game[t]['statistics']:
