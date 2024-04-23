@@ -188,6 +188,7 @@ redirectHTTPS();
                                             
                                                 // Determine which aggregated table or stored procedure to use
                                                 if ($startDate == "$currentYear-01-01" && $endDate == $today) {
+                                                    
                                                     $table = "agg_stats_ytd";  // Year to date
                                                 } elseif ($startDate == $yesterday && $endDate == $yesterday) {
                                                     $table = "agg_stats_yesterday";
@@ -198,6 +199,7 @@ redirectHTTPS();
                                                 } elseif ($startDate == $last30Days && $endDate == $today) {
                                                     $table = "agg_stats_last30";
                                                 }
+                                                print_r($table);
                                                 // SQL uses the $table variable, make sure it's defined before you create the SQL
                                                 if (isset($table)) {
                                                     $sql = "SELECT 
@@ -453,7 +455,30 @@ redirectHTTPS();
         table.column(17).search(value).draw();
     }
 
-    var table = $('#hitters-all').DataTable();
+    var table = $('#hitters-all').DataTable({
+        paging: true,
+        lengthChange: false,
+        searching: true,
+        ordering: true,
+        order: [
+            [18, "desc"],
+            [2, "desc"]
+        ],
+        info: false,
+        autoWidth: false,
+        responsive: false,
+        fixedColumns: true,
+        scrollX: true,
+        columnDefs: [{
+                width: 130,
+                targets: 0
+            },
+            {
+                width: 340,
+                targets: 1
+            }
+        ]
+    });
 
     $('#free-agent').on('click', function() {
         filterColumn('FA');
