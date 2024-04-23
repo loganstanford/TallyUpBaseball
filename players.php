@@ -132,6 +132,18 @@ redirectHTTPS();
                                         <div class=""><i class="nav-icon far fa-circle text-danger ml-2"></i><span
                                                 class="m-2">Not in lineup</span></div>
                                     </div>
+                                    <div id="custom-filters" class="d-inline-block">
+                                        <button class="btn btn-secondary filter-button" data-position="2">C</button>
+                                        <button class="btn btn-secondary filter-button" data-position="3">1B</button>
+                                        <button class="btn btn-secondary filter-button" data-position="4">2B</button>
+                                        <button class="btn btn-secondary filter-button" data-position="5">3B</button>
+                                        <button class="btn btn-secondary filter-button" data-position="6">SS</button>
+                                        <button class="btn btn-secondary filter-button" data-position="7">LF</button>
+                                        <button class="btn btn-secondary filter-button" data-position="8">CF</button>
+                                        <button class="btn btn-secondary filter-button" data-position="9">RF</button>
+                                        <button class="btn btn-secondary filter-button" data-position="10">DH</button>
+                                    </div>
+
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- .card-body -->
@@ -362,7 +374,7 @@ redirectHTTPS();
                                             <td class="box-stats"><?php echo $r['RA/9']; ?></td>
                                             <td class="box-stats"><?php echo $r['WHIP']; ?></td>
                                             <td class="box-stats"><?php echo $r['Total runs']; ?></td>
-                                            <td class="box-stats"><?php echo $r['team_name']; ?></td>
+                                            <td class="box-stats"><?php echo $r['manager_name']; ?></td>
                                             <td class="box-stats"><?php echo $r['Total points']; ?></td>
                                         </tr>
                                         <?php endwhile; ?>
