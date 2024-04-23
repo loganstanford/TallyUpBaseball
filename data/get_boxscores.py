@@ -428,8 +428,8 @@ def insert_lineup_data(game_data, game_id, team_id):
         
         for player in game_data['lineup']:
             sql = text("""
-                INSERT INTO mlb_lineups2 (game_id, team_id, player_id, batting_order, field_position_id, inning, `order`, sequence, inning_half, game_date, inserted_at)
-                VALUES (:game_id, :team_id, :player_id, :batting_order, :field_position_id, :inning, :order, :sequence, :inning_half, :game_date, :inserted_at)
+                INSERT INTO mlb_lineups2 (game_id, team_id, player_id, batting_order, field_position_id, inning, `order`, sequence, inning_half, inserted_at)
+                VALUES (:game_id, :team_id, :player_id, :batting_order, :field_position_id, :inning, :order, :sequence, :inning_half, :inserted_at)
             """)
             connection.execute(sql, {
                 'game_id': game_id,
@@ -441,7 +441,6 @@ def insert_lineup_data(game_data, game_id, team_id):
                 'order': player['order'],
                 'sequence': player['sequence'],
                 'inning_half': player.get('inning_half', ''),
-                'game_date': datetime.date.today(),  # assuming the game is today, adjust accordingly
                 'inserted_at': datetime.datetime.now()
             })
         
@@ -464,8 +463,7 @@ def insert_probable_pitcher(game, t, game_id, team_id, conn):
                 "player_id": game[t]['probable_pitcher'].get('id', ''),
                 "era": float(game[t]['probable_pitcher'].get('era', 0)),  # Assuming ERA is provided as a string
                 "wins": game[t]['probable_pitcher'].get('win', 0),
-                "losses": game[t]['probable_pitcher'].get('loss', 0),
-                "game_date": datetime.date.today()  # Adjust as necessary
+                "losses": game[t]['probable_pitcher'].get('loss', 0)
             }
             # Deleting existing probable pitcher data
             delete_sql = "DELETE FROM mlb_pitchers WHERE game_id = :game_id AND team_id = :team_id AND player_id = :player_id"
