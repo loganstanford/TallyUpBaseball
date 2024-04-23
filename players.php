@@ -458,61 +458,56 @@ redirectHTTPS();
     $('#free-agent').on('click', function() {
         filterColumn('FA');
     });
-    </script>
-    <script>
-    $(document).ready(function() {
-        var table = $('#hitters-all').DataTable({
-            paging: true,
-            lengthChange: false,
-            searching: true,
-            ordering: true,
-            order: [
-                [18, "desc"],
-                [2, "desc"]
-            ],
-            info: false,
-            autoWidth: false,
-            responsive: false,
-            fixedColumns: true,
-            scrollX: true,
-            columnDefs: [{
-                    width: 130,
-                    targets: 0
-                },
-                {
-                    width: 340,
-                    targets: 1
-                }
-            ]
-        });
 
-        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            var activePosition = $('#custom-filters .active').data('position');
-            if (activePosition) {
-                var positions = activePosition.toString().split(
-                    ','); // Split active positions into an array
-                var fieldPositions = data[0].replace(/[{}]/g,
-                    ''); // Remove curly braces and split by comma
-                var positionsInField = fieldPositions.split(',');
-
-                return positions.some(position => positionsInField.includes(position.trim()));
+    var table = $('#hitters-all').DataTable({
+        paging: true,
+        lengthChange: false,
+        searching: true,
+        ordering: true,
+        order: [
+            [18, "desc"],
+            [2, "desc"]
+        ],
+        info: false,
+        autoWidth: false,
+        responsive: false,
+        fixedColumns: true,
+        scrollX: true,
+        columnDefs: [{
+                width: 130,
+                targets: 0
+            },
+            {
+                width: 340,
+                targets: 1
             }
-            return true; // Show all rows if no filter is active
-        });
-
-        $('#custom-filters .filter-button').on('click', function() {
-            $('#custom-filters .filter-button').removeClass('active');
-            $(this).addClass('active'); // Highlight the active button
-            table.draw(); // Redraw the DataTable with the new filter
-        });
-
-        $('#reset-filter').on('click', function() {
-            $('#custom-filters .filter-button').removeClass('active');
-            table.draw(); // Redraw the DataTable without any filters
-        });
+        ]
     });
 
-    table.DataTable();
+    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        var activePosition = $('#custom-filters .active').data('position');
+        if (activePosition) {
+            var positions = activePosition.toString().split(
+                ','); // Split active positions into an array
+            var fieldPositions = data[0].replace(/[{}]/g,
+                ''); // Remove curly braces and split by comma
+            var positionsInField = fieldPositions.split(',');
+
+            return positions.some(position => positionsInField.includes(position.trim()));
+        }
+        return true; // Show all rows if no filter is active
+    });
+
+    $('#custom-filters .filter-button').on('click', function() {
+        $('#custom-filters .filter-button').removeClass('active');
+        $(this).addClass('active'); // Highlight the active button
+        table.draw(); // Redraw the DataTable with the new filter
+    });
+
+    $('#reset-filter').on('click', function() {
+        $('#custom-filters .filter-button').removeClass('active');
+        table.draw(); // Redraw the DataTable without any filters
+    });
     </script>
 
 </body>
